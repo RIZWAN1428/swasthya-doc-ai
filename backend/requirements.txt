@@ -1,3 +1,5 @@
 fastapi
 uvicorn
-pypdf
+pdf2image
+paddleocr
+paddlepaddle
