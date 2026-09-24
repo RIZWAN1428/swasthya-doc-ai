@@ -1,6 +1,7 @@
 import re
 
 from app.schemas.prescription import Prescription
+from app.services.llm_service import parse_medicines
 
 def extract_basic_fields(ocr_text: list[str]) -> Prescription:
     text = "\n".join(ocr_text)
@@ -8,7 +9,7 @@ def extract_basic_fields(ocr_text: list[str]) -> Prescription:
     patient_name = None
     doctor_name = None
     date = None
-    medicines = []
+    raw_medicine_lines: list[str] = []
 
     name_match = re.search(
         r"Name\s*\n([A-Za-z ]+)",
@@ -45,21 +46,18 @@ def extract_basic_fields(ocr_text: list[str]) -> Prescription:
             break
 
         if re.match(r"^(Tablet|Tab|Capsule|Cap)\b", line, re.IGNORECASE):
-            medicines.append({
-                "name": line,
-                "dosage": None,
-                "frequency": None,
-                "duration": None,
-                "instructions": None,
-            })
-        elif medicines:
-            medicines[-1]["name"] += " " + line
-       
+            raw_medicine_lines.append(line)
+        elif raw_medicine_lines:
+            raw_medicine_lines[-1] += " " + line
+    
+    structured_medicines = (
+        parse_medicines(raw_medicine_lines) if raw_medicine_lines else []
+    ) 
     return Prescription(
-        patient_name = patient_name,
-        doctor_name = doctor_name,
-        date = date,
-        medicines=medicines,
+        patient_name=patient_name,
+        doctor_name=doctor_name,
+        date=date,
+        medicines=structured_medicines,
     )
 
     

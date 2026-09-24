@@ -5,3 +5,5 @@ paddleocr
 paddlepaddle
 python-multipart
 onnxruntime
+huggingface_hub
+transformers
