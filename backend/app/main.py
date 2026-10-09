@@ -4,8 +4,17 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from app.services.ocr_service import extract_text_from_image
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.extraction_service import extract_basic_fields
+from fastapi.middleware.cors import CORSMiddleware
 
 app  = FastAPI(title="Swasthya Doc AI")
+
+app.add_middleware(
+    CORSmiddleware,
+    allow_origins=["http://localhost:4200"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():

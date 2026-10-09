@@ -12,3 +12,4 @@ now added regex to extract info.
 regex implemented done now we install onnx runtime for llm.
 implement llm_service using llm model.
 extract data send to llm then parse to json.
+Added CORS in backend app/main.py
